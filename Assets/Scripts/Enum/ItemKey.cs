@@ -1,0 +1,55 @@
+﻿using System;
+
+namespace Enum
+{
+  [Serializable]
+  public enum ItemKey
+  {
+    Avocado,
+    Banana,
+    Bread,
+    Burger,
+    Cheese,
+    Chicken,
+    Chili,
+    ChipsBag,
+    Coconut,
+    Croissant,
+    Donut,
+    GreenDrink,
+    RedDrink,
+    BlueDrink,
+    Chocolate,
+    Fries,
+    HotDog,
+    IceCream,
+    IceCreamCone,
+    Maki,
+    MeatBall,
+    Mochi,
+    Muffin,
+    Mushroom,
+    Omelette,
+    Onigiri,
+    Onion,
+    Pepper,
+    Pineapple,
+    Pizza,
+    RiceBowl,
+    Salad,
+    Saucisson,
+    Sausage,
+    Shrimp,
+    SteakCooked,
+    SteakUncooked,
+    Sushi,
+    SweetPepper,
+    Tacos,
+    Tempura,
+    Toast,
+    Tomato,
+    Watermelon,
+    WineBottle,
+    Empty
+  }
+}
