@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Enum;
 using Level;
 using UnityEngine;
+using View;
 using Random = UnityEngine.Random;
 
 namespace Managers
@@ -27,9 +30,15 @@ namespace Managers
     }
 
     private readonly List<GameObject> _levelItems = new();
+
+    private readonly Dictionary<Item, int> _levelNecessaryItemsInitial = new();
+
+    private readonly Dictionary<ItemKey, int> _levelNecessaryItems = new();
     private async void GetLevelObjectsReady()
     {
       _levelItems.Clear();
+      _levelNecessaryItemsInitial.Clear();
+      _levelNecessaryItems.Clear();
 
       List<int> itemIds = new();
 
@@ -40,7 +49,7 @@ namespace Managers
         
         itemIds.Add(index);
         _levelItems.Add(AllItems[index]);
-        if (itemIds.Count == 15) break;
+        if (itemIds.Count == 5 + GameManager.Level * 2) break;
       }
 
       List<int> levelData = _levelVos.ElementAt(GameManager.Level).Value.NecessaryItemCount;
@@ -55,17 +64,22 @@ namespace Managers
         if (i < levelData.Count)
         {
           count = levelData[i];
+          _levelNecessaryItemsInitial.Add(_levelItems[i].GetComponent<Item>(), count);
+          _levelNecessaryItems.Add(_levelItems[i].GetComponent<Item>().GetItemKey(), count);
         }
-        
+
+        if (i == levelData.Count)
+          GameManager.Instance.PanelManager.InGamePanel.SetNecessaryItemsInitial(GetLevelNecessities());
+
         InstantiateItem(_levelItems[i], count);
 
         await Task.Delay(50);
       }
     }
 
-    private const float _lastPointX = 0.4f;
+    private const float _lastPointX = 0.3f;
     
-    private const float _lastPointZ = 0.75f;
+    private const float _lastPointZ = 0.6f;
 
     private void InstantiateItem(GameObject item, int count)
     {
@@ -79,7 +93,7 @@ namespace Managers
       }
     }
 
-    private Dictionary<int, LevelVo> _levelVos = new();
+    private readonly Dictionary<int, LevelVo> _levelVos = new();
     
     private const string _dataPath = "Data/Level/Level Data";
     private void LoadLevelData()
@@ -90,6 +104,36 @@ namespace Managers
       for (int i = 0; i < levelData.Count; i++)
       {
         _levelVos.Add(i, levelData[i]);
+      }
+    }
+
+    public LevelVo GetLevelVo(int level)
+    {
+      return _levelVos[level];
+    }
+
+    public Dictionary<Item, int> GetLevelNecessities()
+    {
+      return _levelNecessaryItemsInitial;
+    }
+
+    public Action<ItemKey, int> OnDataChanged;
+
+    public void MatchedNecessaryItem(ItemKey itemKey)
+    {
+      if (!_levelNecessaryItems.ContainsKey(itemKey)) return;
+      
+      OnDataChanged?.Invoke(itemKey, 1);
+
+      _levelNecessaryItems[itemKey]--;
+      if (_levelNecessaryItems[itemKey] <= 0)
+      {
+        _levelNecessaryItems.Remove(itemKey);
+      }
+      
+      if (_levelNecessaryItems.Count == 0)
+      {
+        GameManager.Instance.GameFinished(true);
       }
     }
   }

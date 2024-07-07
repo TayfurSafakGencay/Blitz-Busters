@@ -45,16 +45,22 @@ namespace UI.InGame
       }
     }
 
+
+    private const float _newScale = 1750;
     public async void ItemCollected(Item itemScript)
     {
       itemScript.gameObject.layer = 5;
       itemScript.transform.parent = _itemPool;
-      itemScript.transform.localScale = new Vector3(1000, 1000, 1000);
-      WorldPositionToUI(itemScript.transform.position, itemScript.gameObject);
+      itemScript.transform.localScale = new Vector3(_newScale, _newScale, _newScale);
       itemScript.transform.DORotateQuaternion(new Quaternion(0, 0, 0, 0), 0.5f);
 
+      WorldPositionToUI(itemScript.transform.position, itemScript.gameObject);
+
+      GameManager.Instance.LevelManager.MatchedNecessaryItem(itemScript.GetItemKey());
 
       await CheckSameKey(itemScript);
+
+      CheckLosingConditions();
     }
     
     private async Task CheckSameKey(Item itemScript)
@@ -176,6 +182,7 @@ namespace UI.InGame
     {
       Image itemImage = _itemImageQueue.Dequeue();
       itemImage.gameObject.SetActive(false);
+      itemImage.color = new Color(1, 1, 1, 1);
 
       ItemVo itemVo = new()
       {
@@ -215,6 +222,16 @@ namespace UI.InGame
         item.gameObject.SetActive(false);
         _itemImageQueue.Enqueue(itemImage);
       });
+    }
+
+    private void CheckLosingConditions()
+    {
+      for (int i = 0; i < _slots.Count; i++)
+      {
+        if (_slots.ElementAt(i).Value.Key == ItemKey.Empty) return;
+      }
+      
+      GameManager.Instance.GameFinished(false);
     }
 
     [SerializeField]

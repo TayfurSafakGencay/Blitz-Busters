@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Enum;
+﻿using Enum;
 using Managers;
 using UnityEngine;
 
@@ -19,6 +17,7 @@ namespace View
     private void Awake()
     {
       GameManager.OnGameStarted += OnGameStarted;
+      GameManager.OnGameFinished += OnGameFinished;
     }
 
     private void OnGameStarted()
@@ -44,7 +43,7 @@ namespace View
       Destroy(gameObject.GetComponent<MeshCollider>());
       Destroy(gameObject.GetComponent<Rigidbody>());
       
-      GameManager.Instance.Collector.ItemCollected(this);
+      GameManager.Instance.PanelManager.Collector.ItemCollected(this);
     }
 
     public ItemKey GetItemKey()
@@ -55,6 +54,19 @@ namespace View
     public Sprite GetSprite()
     {
       return _sprite;
+    }
+    
+    private void OnGameFinished(bool success)
+    {
+      _clicked = true;
+      
+      Destroy(gameObject, Random.Range(0.9f, 1.5f));
+    }
+
+    private void OnDestroy()
+    {
+      GameManager.OnGameStarted -= OnGameStarted;
+      GameManager.OnGameFinished -= OnGameFinished;
     }
   }
 }

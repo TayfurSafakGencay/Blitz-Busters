@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: Level Data
   m_EditorClassIdentifier: 
   LevelList:
-  - NecessaryItemCount: 
-  - NecessaryItemCount: 0300000003000000
-  - NecessaryItemCount: 030000000300000003000000
-  - NecessaryItemCount: 0300000006000000
-  - NecessaryItemCount: 030000000600000003000000
-  - NecessaryItemCount: 06000000030000000600000003000000
+  - LevelTime: 0
+    NecessaryItemCount: 
+  - LevelTime: 30
+    NecessaryItemCount: 0300000003000000
+  - LevelTime: 45
+    NecessaryItemCount: 030000000300000003000000
+  - LevelTime: 60
+    NecessaryItemCount: 0300000006000000
+  - LevelTime: 75
+    NecessaryItemCount: 030000000600000003000000
+  - LevelTime: 120
+    NecessaryItemCount: 06000000030000000600000003000000

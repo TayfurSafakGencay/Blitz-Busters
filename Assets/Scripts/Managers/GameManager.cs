@@ -1,5 +1,4 @@
 ﻿using System;
-using UI.InGame;
 using UnityEngine;
 
 namespace Managers
@@ -8,11 +7,13 @@ namespace Managers
   {
     public static GameManager Instance;
     
-    public Collector Collector;
-
     public ParticleManager ParticleManager;
 
     public SoundManager SoundManager;
+
+    public LevelManager LevelManager;
+
+    public PanelManager PanelManager;
 
     public static int Level = 1;
 
@@ -28,16 +29,19 @@ namespace Managers
 
     public static Action OnGameStarted;
     
-    public static void GameStarted()
+    public void GameStarted()
     {
+
       OnGameStarted?.Invoke();  
     }
 
     public static Action<bool> OnGameFinished;
     
-    public static void GameFinished(bool success)
+    public void GameFinished(bool success)
     {
       OnGameFinished?.Invoke(success);
+
+      if (success) Level++;
     }
   }
 }

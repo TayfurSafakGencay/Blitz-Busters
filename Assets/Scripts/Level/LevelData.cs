@@ -19,6 +19,8 @@ namespace Level
   [Serializable]
   public struct LevelVo
   {
+    public int LevelTime;
+
     public List<int> NecessaryItemCount;
   }
 }
